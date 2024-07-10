@@ -4,6 +4,8 @@ from . import schemas, models
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 from .hashing import Hash
+import blog
+from .routers import blog
 
 
 models.Base.metadata.create_all(engine)
@@ -11,20 +13,22 @@ models.Base.metadata.create_all(engine)
 
 app = FastAPI()
 
+app.include_router(blog.router)
+
 
 @app.post('/blog', status_code=status.HTTP_201_CREATED, tags=["blogs"])
-def create_blog(blog: schemas.Blog, db:Session=Depends(get_db)):
-    new_blog = models.Blog(title=blog.title, body=blog.body)
+def create_blog(blog: schemas.ShowBlog, db:Session=Depends(get_db)):
+    new_blog = models.Blog(title=blog.title, body=blog.body, user_id=1)
     db.add(new_blog)
     db.commit()
     db.refresh(new_blog)
     return new_blog
 
 
-@app.get('/blog/',response_model=list[schemas.ShowBlog], tags=["blogs"])
-def all(db:Session=Depends(get_db)):
-    blogs = db.query(models.Blog).all()
-    return blogs
+# @app.get('/blog/',response_model=list[schemas.ShowBlog], tags=["blogs"])
+# def all(db:Session=Depends(get_db)):
+#     blogs = db.query(models.Blog).all()
+#     return blogs
 
 @app.delete('/blog/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=["blogs"])
 def delete(id, db: Session=Depends(get_db)):
