@@ -8,14 +8,13 @@ from pydantic import BaseModel
 class Blog(BaseModel):
     title: str
     body: str
-    creator: ShowUser
     class Config():
         from_attributes = True
   
 class ShowBlog(BaseModel):
     title: str
     body: str
-    creator: ShowUser   
+    creator: BlogCreator   
     class Config():
         from_attributes = True
 
@@ -32,9 +31,13 @@ class User(BaseModel):
 class ShowUser(BaseModel):
     name: str
     email: str
-    blogs: List[ShowBlog] = []
+    blogs: List[Blog] = []
     class Config():
         from_attributes = True
+        
+class BlogCreator(ShowUser):
+    name:str
+    email:str
         
         
 

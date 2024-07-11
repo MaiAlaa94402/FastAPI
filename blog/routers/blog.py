@@ -1,4 +1,4 @@
-from requests import Session
+from sqlalchemy.orm import Session
 from blog import models, schemas
 from blog.database import get_db
 from fastapi import APIRouter, Depends
