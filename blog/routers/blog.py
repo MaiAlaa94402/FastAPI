@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
-from blog import models, schemas
+from blog import schemas
 from blog.database import get_db
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, Response, status
 from ..repository import blog
+from .. import oauth2
 
 router = APIRouter(
     prefix='/blog',
@@ -11,7 +12,7 @@ router = APIRouter(
 
 
 @router.get('/',response_model=list[schemas.ShowBlog])
-def all(db:Session=Depends(get_db)):
+def all(db:Session=Depends(get_db), get_current_user: schemas.User=Depends(oauth2.get_current_user)):
     return blog.get_all(db)
 
 @router.get('/{id}', status_code=200, response_model=schemas.ShowBlog)
