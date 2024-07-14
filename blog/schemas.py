@@ -35,9 +35,10 @@ class ShowUser(BaseModel):
     class Config():
         from_attributes = True
         
-class BlogCreator(ShowUser):
+class BlogCreator(BaseModel):
     name:str
     email:str
+        
         
         
 
