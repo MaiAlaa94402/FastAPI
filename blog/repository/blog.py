@@ -3,17 +3,25 @@ from .. import models, schemas
 from fastapi import HTTPException, status
 import aiohttp
 import asyncio
+from sqlalchemy.ext.asyncio import create_async_engine
 
 def get_all(db: Session):
     blogs = db.query(models.Blog).all()
     return blogs
 
+# async def create(id:int, blog: schemas.Blog, db:Session):
+#     async with aiohttp.ClientSession() as session:
+#         new_blog = models.Blog(title=blog.title, body=blog.body, user_id=id)
+#         db.add(new_blog)
+#         await db.commit()
+#         db.refresh(new_blog)
+#     return new_blog
+
 async def create(id:int, blog: schemas.Blog, db:Session):
-    async with aiohttp.ClientSession() as session:
-        new_blog = models.Blog(title=blog.title, body=blog.body, user_id=id)
-        db.add(new_blog)
-        await db.commit()
-        db.refresh(new_blog)
+    new_blog = models.Blog(title=blog.title, body=blog.body, user_id=id)
+    db.add(new_blog)
+    await db.commit()
+    db.refresh(new_blog)
     return new_blog
 
 def destroy(id:int, db:Session):

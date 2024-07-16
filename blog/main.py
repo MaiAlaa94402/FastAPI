@@ -3,10 +3,21 @@ from . import models
 from .database import engine
 import blog
 from .routers import blog, user, auth
+import asyncio
 
 
-models.Base.metadata.create_all(engine)
+async def init_models():
+    async with engine.begin() as conn:
+        # await conn.run_sync(models.Base.metadata.drop_all)
+        await conn.run_sync(models.Base.metadata.create_all)
 
+# asyncio.run(init_models())
+
+
+
+    # await engine.dispose()
+
+# asyncio.run(init_models())
 
 app = FastAPI()
 
