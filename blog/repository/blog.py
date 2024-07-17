@@ -3,7 +3,7 @@ from .. import models, schemas
 from fastapi import HTTPException, status
 import aiohttp
 import asyncio
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 
 def get_all(db: Session):
     blogs = db.query(models.Blog).all()
@@ -17,11 +17,11 @@ def get_all(db: Session):
 #         db.refresh(new_blog)
 #     return new_blog
 
-async def create(id:int, blog: schemas.Blog, db:Session):
+async def create(id:int, blog: schemas.Blog, db:AsyncSession):
     new_blog = models.Blog(title=blog.title, body=blog.body, user_id=id)
     db.add(new_blog)
     await db.commit()
-    db.refresh(new_blog)
+    await db.refresh(new_blog)
     return new_blog
 
 def destroy(id:int, db:Session):

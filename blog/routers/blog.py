@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from blog import schemas
 from blog.database import get_db
 from fastapi import APIRouter, Depends, Response, status
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from ..repository import blog
 from .. import oauth2
 import aiohttp
@@ -46,8 +47,8 @@ def get_blog(id, response:Response, db:Session=Depends(get_db)):
     # return 'done'
 
 @router.post('/{id}', status_code=status.HTTP_201_CREATED)
-def create_blog(id: int, requests: schemas.Blog, db:Session=Depends(get_db)):
-    return blog.create(id, requests, db)
+async def create_blog(id: int, requests: schemas.Blog, db:AsyncSession=Depends(get_db)):
+    return await blog.create(id, requests, db)
 
 @router.put('/{id}', status_code=status.HTTP_202_ACCEPTED)
 def update(id, request :schemas.Blog, db:Session=Depends(get_db)):
