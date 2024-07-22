@@ -1,9 +1,7 @@
 from __future__ import annotations
-from typing import Optional, List
+from typing import List
 from pydantic import BaseModel
 
-# if TYPE_CHECKING:
-#     from __future__ import annotations  
 
 class Blog(BaseModel):
     title: str
