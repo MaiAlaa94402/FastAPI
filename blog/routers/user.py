@@ -3,6 +3,8 @@ from blog import schemas
 from sqlalchemy.orm import Session
 from ..database import get_db
 from ..repository import user
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 
 router = APIRouter(
@@ -12,13 +14,13 @@ router = APIRouter(
 
 
 @router.post('/', status_code=status.HTTP_201_CREATED)
-def create_user(User: schemas.User, db:Session=Depends(get_db)):
-    return user.create(User, db)
+async def create_user(User: schemas.User, db:AsyncSession=Depends(get_db)):
+    return await user.create(User, db)
 
 @router.get('/{id}', response_model=schemas.ShowUser)
-def get_user(id:int, db:Session=Depends(get_db)):
-    return user.get(id, db)
+async def get_user(id:int, db:AsyncSession=Depends(get_db)):
+    return await user.get(id, db)
 
 @router.get('/', response_model=list[schemas.ShowUser])
-def all(db:Session=Depends(get_db)):
-    return user.get_all(db)
+async def all(db:AsyncSession=Depends(get_db)):
+    return await user.get_all(db)

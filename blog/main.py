@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from . import models
-from .database import engine
+from .database import engine, Base, SessionLocal
 import blog
 from .routers import blog, user, auth
 import asyncio
@@ -18,6 +18,15 @@ import asyncio
     # await engine.dispose()
 
 # asyncio.run(init_models())
+async def get_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        await db.close()
 
 app = FastAPI()
 
