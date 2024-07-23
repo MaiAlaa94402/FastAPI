@@ -39,3 +39,4 @@ async def update(id:int, blog:schemas.Blog, db:AsyncSession):
     db.commit()
     db.close()
     return f'Blog is updated'
+
